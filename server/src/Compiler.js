@@ -39,8 +39,7 @@ var Compiler = {
             debug: true,
             module: {
                 loaders: [
-                    { test: /\.js$/, loader: 'jsx-loader?harmony' },
-                    { test: /\.jsx$/, loader: 'jsx-loader?harmony' },
+                    { test: /\.jsx?$/, loader: 'jsx-loader?harmony' },
                     { test: /\.css$/, loader: "style-loader!css-loader" },
                     { test: /\.(eot|woff|ttf|svg|png|jpg)([\?]?.*)$/, loader: 'url-loader' }
                 ]
@@ -136,8 +135,7 @@ var Compiler = {
             debug: true,
             module: {
                 loaders: [
-                    {test: /\.js$/, loader: 'jsx-loader?harmony'},
-                    {test: /\.jsx$/, loader: 'jsx-loader?harmony'},
+                    {test: /\.jsx?$/, loader: 'jsx-loader?harmony'},
                     {test: /\.css$/, loader: "style-loader!css-loader"},
                     {test: /\.(eot|woff|ttf|svg|png|jpg)([\?]?.*)$/, loader: 'url-loader'}
                 ]
