@@ -39,8 +39,7 @@ var Compiler = {
             debug: true,
             module: {
                 loaders: [
-                    { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
-                    { test: /\.jsx$/, exclude: /node_modules/, loader: 'babel-loader' },
+                    { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' },
                     { test: /\.css$/, loader: "style-loader!css-loader" },
                     { test: /\.(eot|woff|ttf|svg|png|jpg)([\?]?.*)$/, loader: 'url-loader' }
                 ]
@@ -136,8 +135,7 @@ var Compiler = {
             debug: true,
             module: {
                 loaders: [
-                    { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
-                    { test: /\.jsx$/, exclude: /node_modules/, loader: 'babel-loader' },
+                    { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' },
                     {test: /\.css$/, loader: "style-loader!css-loader"},
                     {test: /\.(eot|woff|ttf|svg|png|jpg)([\?]?.*)$/, loader: 'url-loader'}
                 ]
