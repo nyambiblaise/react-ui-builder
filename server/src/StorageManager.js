@@ -510,8 +510,8 @@ var StorageManager = {
      */
     readDir: function (start, callback, testFileNames) {
         var self = this;
-        // Use lstat to resolve symlink if we are passed a symlink
-        fs.lstat(start, function (err, stat) {
+        // Use stat to resolve symlink if we are passed a symlink
+        fs.stat(start, function (err, stat) {
                 if (err) {
                     return callback(err);
                 }
