@@ -1,6 +1,9 @@
 var _ = require('lodash');
 var React = require('react/addons');
 
+var BootCommon = require('boot/common');
+BootCommon.init();
+
 var components = require('<%= indexFilePath.replace(/\\/g, '/') %>');
 
 var PageForDesk = React.createClass({
