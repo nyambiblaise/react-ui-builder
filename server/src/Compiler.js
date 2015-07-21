@@ -27,9 +27,8 @@ var Compiler = {
         }
     },
 
-    startCompiler: function(nodeModulesDir, builderModulesDir, entryFilePath, outputDirPath, outputFileName, callback){
-
-        var compiler = webpack({
+    getWebpackConfig: function(nodeModulesDir, builderModulesDir, entryFilePath, outputDirPath, outputFileName, callback){
+        var config = {
             name: "browser",
             entry: [entryFilePath],
             output: {
@@ -48,12 +47,31 @@ var Compiler = {
             resolveLoader: {
                 root: [nodeModulesDir, builderModulesDir]
             },
+            node: {
+                console: false,
+                process: true,
+                global: true,
+                Buffer: true,
+                __filename: "mock",
+                __dirname: "mock",
+                fs: "empty"
+            },
+            resolve: {
+                extensions: [ '', '.json', '.js', '.jsx' ],
+                root: path.join( nodeModulesDir, '../client' )
+            },
             externals: {
                 // require("jquery") is external and available
                 //  on the global var jQuery
                 "jquery": "jQuery"
             }
-        });
+        };
+        return config;
+    },
+
+    startCompiler: function(nodeModulesDir, builderModulesDir, entryFilePath, outputDirPath, outputFileName, callback){
+
+        var compiler = webpack(this.getWebpackConfig(nodeModulesDir, builderModulesDir, entryFilePath, outputDirPath, outputFileName, callback));
 
         compiler.run(function(err, stats) {
             var jsonStats = stats.toJson({
@@ -125,31 +143,8 @@ var Compiler = {
 
     watchCompiler: function (nodeModulesDir, builderModulesDir, entryFilePath, outputDirPath, outputFileName, callback) {
 
-        var compiler = webpack({
-            name: "browser",
-            entry: [entryFilePath],
-            output: {
-                path: outputDirPath,
-                filename: outputFileName
-            },
-            debug: true,
-            module: {
-                loaders: [
-                    { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' },
-                    {test: /\.css$/, loader: "style-loader!css-loader"},
-                    {test: /\.(eot|woff|ttf|svg|png|jpg)([\?]?.*)$/, loader: 'url-loader'}
-                ]
-            },
-            //resolveLoader: { root: path.join(__dirname, "node_modules") },
-            resolveLoader: {
-                root: [nodeModulesDir, builderModulesDir]
-            },
-            externals: {
-                // require("jquery") is external and available
-                //  on the global var jQuery
-                "jquery": "jQuery"
-            }
-        });
+        var compiler = webpack(this.getWebpackConfig(nodeModulesDir, builderModulesDir, entryFilePath, outputDirPath, outputFileName, callback));
+
         var compiledProcessCount = 0;
         var processId = setTimeout(function () {
             watcher = compiler.watch(200, function (err, stats) {
