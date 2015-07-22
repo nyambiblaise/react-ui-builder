@@ -1,6 +1,15 @@
 var _ = require('lodash');
 var React = require('react/addons');
 
+// Prevent component errors from bringing the whole component tree down
+var ReactSafeRender = require('react-safe-render');
+var safeRenderConfig = {
+    errorHandler: function(info) {
+        console.error("Error in component", info.displayName, info.error);
+    }
+};
+ReactSafeRender(React, safeRenderConfig);
+
 var BootCommon = require('boot/common');
 BootCommon.init();
 

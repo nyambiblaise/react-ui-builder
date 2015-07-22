@@ -58,7 +58,7 @@ var Compiler = {
             },
             resolve: {
                 extensions: [ '', '.json', '.js', '.jsx' ],
-                root: path.join( nodeModulesDir, '../client' )
+                root: [path.join( nodeModulesDir, '../client' ), builderModulesDir]
             },
             externals: {
                 // require("jquery") is external and available
