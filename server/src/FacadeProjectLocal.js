@@ -482,7 +482,7 @@ var FacadeProjectLocal = {
     // Generate the default file paths for newly generated component source
     defaultFilePaths: function(options) {
       if(projectComponentsIndexFilePath && projectComponentsIndexFilePath.length > 0){
-          //
+
           var indexFileDirPath = path.dirname(projectComponentsIndexFilePath);
           var paths = {};
 
@@ -503,8 +503,6 @@ var FacadeProjectLocal = {
           }
 
           return paths;
-
-          //
       } else {
           throw 'components-index.js file was not specified.';
       }
