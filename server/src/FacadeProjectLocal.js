@@ -479,100 +479,116 @@ var FacadeProjectLocal = {
         }
     },
 
+    // Generate the default file paths for newly generated component source
+    defaultFilePaths: function(options) {
+      if(projectComponentsIndexFilePath && projectComponentsIndexFilePath.length > 0){
+          //
+          var indexFileDirPath = path.dirname(projectComponentsIndexFilePath);
+          var paths = {};
+
+          if(options.componentGroup && options.componentGroup.trim().length > 0){
+              paths.componentSource = path.join(indexFileDirPath, 'components', options.componentGroup, options.componentName + '.js');
+              paths.store = path.join(indexFileDirPath, 'stores', options.componentGroup, options.componentName + 'Store.js');
+              paths.actions = path.join(indexFileDirPath, 'actions', options.componentGroup, options.componentName + 'Actions.js');
+              paths.relativeSource = './' + path.join('components', options.componentGroup, options.componentName + '.js');
+          } else {
+              paths.componentSource = path.join(indexFileDirPath, 'components', options.componentName + '.js');
+              paths.store = path.join(indexFileDirPath, 'stores', options.componentName + 'Store.js');
+              paths.actions = path.join(indexFileDirPath, 'actions', options.componentName + 'Actions.js');
+              paths.relativeSource = './' + path.join('components', options.componentName + '.js');
+          }
+
+          if(options.paths){
+            paths = _.extend(paths, options.paths);
+          }
+
+          return paths;
+
+          //
+      } else {
+          throw 'components-index.js file was not specified.';
+      }
+    },
+
     writeNewComponentSourceCode: function(options, callback){
-        if(projectComponentsIndexFilePath && projectComponentsIndexFilePath.length > 0){
-            //
-            var indexFileDirPath = path.dirname(projectComponentsIndexFilePath);
-            var sourceFilePath = null;
-            var storeFilePath = null;
-            var actionsFilePath = null;
-            var relativeSourceFilePath = null;
-            if(options.componentGroup && options.componentGroup.trim().length > 0){
-                sourceFilePath = path.join(indexFileDirPath, 'components', options.componentGroup, options.componentName + '.js');
-                storeFilePath = path.join(indexFileDirPath, 'stores', options.componentGroup, options.componentName + 'Store.js');
-                actionsFilePath = path.join(indexFileDirPath, 'actions', options.componentGroup, options.componentName + 'Actions.js');
-                relativeSourceFilePath = './' + path.join('components', options.componentGroup, options.componentName + '.js');
-            } else {
-                sourceFilePath = path.join(indexFileDirPath, 'components', options.componentName + '.js');
-                storeFilePath = path.join(indexFileDirPath, 'stores', options.componentName + 'Store.js');
-                actionsFilePath = path.join(indexFileDirPath, 'actions', options.componentName + 'Actions.js');
-                relativeSourceFilePath = './' + path.join('components', options.componentName + '.js');
-            }
 
-            var f = function(){
-                //
-                ComponentCodeRewriter.repairComponentReferences({
-                    data: options.sourceCode,
-                    indexFilePath: projectComponentsIndexFilePath,
-                    componentGroup: options.componentGroup
-                }, function(err, data){
-                    if(err){
-                        callback(err);
-                    } else {
-                        StorageManager.writeFile(
-                            {
-                                filePath: sourceFilePath,
-                                data: data
-                            },
-                            function(err){
-                                if(err){
-                                    callback(err);
-                                } else {
-                                    ComponentsIndexManager.modifyIndex(projectComponentsIndexFilePath,
-                                        {
-                                            componentGroup: options.componentGroup,
-                                            componentName: options.componentName,
-                                            relativeFilePath: relativeSourceFilePath
-                                        },
-                                        function (err) {
-                                            if (err) {
-                                                callback(err);
-                                            } else {
-                                                callback();
-                                            }
-                                        }
-                                    );
-                                }
-                            }
-                        );
-                    }
-                });
-            };
-            //
-            if(options.actionsSourceCode && options.storeSourceCode){
-                StorageManager.writeFile(
-                    {
-                        filePath: actionsFilePath,
-                        data: options.actionsSourceCode
-                    },
-                    function(err){
-                        if(err){
-                            callback(err);
-                        } else {
-                            StorageManager.writeFile(
-                                {
-                                    filePath: storeFilePath,
-                                    data: options.storeSourceCode
-                                },
-                                function(err){
-                                    if(err){
-                                        callback(err);
-                                    } else {
-                                        f();
-                                    }
-                                }
-                            );
-                        }
-                    }
-                );
-            } else {
-                f();
-            }
+      var paths = null;
+      try {
+        paths = this.defaultFilePaths(options);
+      }catch (e){
+        callback(e);
+        return;
+      }
 
-            //
-        } else {
-            callback('components-index.js file was not specified.');
-        }
+      var f = function(){
+          //
+          ComponentCodeRewriter.repairComponentReferences({
+              data: options.sourceCode,
+              indexFilePath: projectComponentsIndexFilePath,
+              componentGroup: options.componentGroup
+          }, function(err, data){
+              if(err){
+                  callback(err);
+              } else {
+                  StorageManager.writeFile(
+                      {
+                          filePath: paths.componentSource,
+                          data: data
+                      },
+                      function(err){
+                          if(err){
+                              callback(err);
+                          } else {
+                              ComponentsIndexManager.modifyIndex(projectComponentsIndexFilePath,
+                                  {
+                                      componentGroup: options.componentGroup,
+                                      componentName: options.componentName,
+                                      relativeFilePath: paths.relativeSource
+                                  },
+                                  function (err) {
+                                      if (err) {
+                                          callback(err);
+                                      } else {
+                                          callback();
+                                      }
+                                  }
+                              );
+                          }
+                      }
+                  );
+              }
+          });
+      };
+      //
+      if(options.actionsSourceCode && options.storeSourceCode){
+          StorageManager.writeFile(
+              {
+                  filePath: paths.actions,
+                  data: options.actionsSourceCode
+              },
+              function(err){
+                  if(err){
+                      callback(err);
+                  } else {
+                      StorageManager.writeFile(
+                          {
+                              filePath: paths.store,
+                              data: options.storeSourceCode
+                          },
+                          function(err){
+                              if(err){
+                                  callback(err);
+                              } else {
+                                  f();
+                              }
+                          }
+                      );
+                  }
+              }
+          );
+      } else {
+          f();
+      }
     },
 
     generateComponentChildrenCode: function(options, callback){
