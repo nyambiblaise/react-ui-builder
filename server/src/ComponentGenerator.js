@@ -70,6 +70,8 @@ var processProps = function(props){
                     result += prop + "={{ " + processStyle(value) + " }} ";
                 } else if(value['type']){
                     result += prop +"={ " + processChild(value) + " }";
+                } else {
+                  result += prop + "={" + JSON.stringify(value) + "}";
                 }
             }
         });
