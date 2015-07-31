@@ -177,6 +177,16 @@ var ApplicationStore = Reflux.createStore({
                     //
                     Server.invoke('setProjectProxy', {}, function(err){}, function(response){});
                     Server.invoke('watchLocalProject', {}, function(err){}, function(response){});
+                    Server.invoke("readDefaultNewComponentPaths",
+                      {},
+                      function(errors){
+                        self.onGoToErrors(errors);
+                      },
+                      function(response){
+                        console.log("readDefaultNewComponentPaths response:", response);
+                        Repository.setDefaultNewComponentPaths(response);
+                      }
+                    );
                     //
                     this.onGoToDeskPage();
                     //

@@ -24,6 +24,12 @@ var redoPool = [];
 var undoPool = [];
 var callbackAfterProjectModelRenew = null;
 
+var defaultNewComponentPaths = {
+  componentSource: "",
+  store: "",
+  actions: ""
+};
+
 function findComponent(index, componentName, level, result){
     var _result = result || {};
     if(index && _.isObject(index) && level <= 1){
@@ -309,7 +315,30 @@ var Repository = {
 
     getHtmlForDesk: function(){
         return htmlForDesk;
-    }
+    },
+
+    setDefaultNewComponentPaths: function(paths) {
+        defaultNewComponentPaths = paths;
+    },
+
+    /**
+     * Get a default path for a newly generated component source file.
+     * pathType should be any of the following:
+     *  - componentSource: The component's main definition
+     *  - store: The Reflux store source
+     *  - actions: The Reflux actions source
+     * See server/src/FacadeProjectLocal.js > defaultFilePaths
+     **/
+    getDefaultPathFor: function(pathType, componentName, componentGroup) {
+        if(pathType in defaultNewComponentPaths) {
+          var defaultPath = defaultNewComponentPaths[pathType];
+          defaultPath = defaultPath.replace("COMPONENT_NAME", componentName);
+          defaultPath = defaultPath.replace("COMPONENT_GROUP", componentGroup);
+          return defaultPath;
+        }else{
+          return "";
+        }
+    },
 
 
 };

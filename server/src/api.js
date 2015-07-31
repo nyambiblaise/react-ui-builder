@@ -160,6 +160,21 @@ module.exports = {
         });
     },
 
+    readDefaultNewComponentPaths: function(options, callback){
+        try {
+            var paths = FacadeProjectLocal.defaultFilePaths({
+                componentGroup: "COMPONENT_GROUP",
+                componentName: "COMPONENT_NAME"
+            });
+            callback({data: paths});
+        }catch(err){
+            callback({
+                error: true,
+                errors: [err]
+            });
+        }
+    },
+
     getPackageConfig: function(options, callback){
         StorageManager.readObject(path.join(systemEnv.builderDir, 'package.json'), function(err, data){
             if(err){

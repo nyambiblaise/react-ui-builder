@@ -487,20 +487,21 @@ var FacadeProjectLocal = {
           var paths = {};
 
           if(options.componentGroup && options.componentGroup.trim().length > 0){
-              paths.componentSource = path.join(indexFileDirPath, 'components', options.componentGroup, options.componentName + '.js');
-              paths.store = path.join(indexFileDirPath, 'stores', options.componentGroup, options.componentName + 'Store.js');
-              paths.actions = path.join(indexFileDirPath, 'actions', options.componentGroup, options.componentName + 'Actions.js');
-              paths.relativeSource = './' + path.join('components', options.componentGroup, options.componentName + '.js');
+              paths.componentSource = path.join(indexFileDirPath, '../client/components', options.componentGroup, options.componentName, 'index.jsx');
+              paths.store = path.join(indexFileDirPath, '../client/components', options.componentGroup, options.componentName, 'store.js');
+              paths.actions = path.join(indexFileDirPath, '../client/components', options.componentGroup, options.componentName, 'actions.js');
           } else {
-              paths.componentSource = path.join(indexFileDirPath, 'components', options.componentName + '.js');
-              paths.store = path.join(indexFileDirPath, 'stores', options.componentName + 'Store.js');
-              paths.actions = path.join(indexFileDirPath, 'actions', options.componentName + 'Actions.js');
-              paths.relativeSource = './' + path.join('components', options.componentName + '.js');
+              paths.componentSource = path.join(indexFileDirPath, '../client/components', options.componentName, 'index.jsx');
+              paths.store = path.join(indexFileDirPath, '../client/components', options.componentName, 'store.js');
+              paths.actions = path.join(indexFileDirPath, '../client/components', options.componentName, 'actions.js');
           }
 
           if(options.paths){
             paths = _.extend(paths, options.paths);
           }
+
+          // Find path to the component source relative to the components-index.js file
+          paths.relativeSource = path.relative(indexFileDirPath, paths.componentSource)
 
           return paths;
       } else {

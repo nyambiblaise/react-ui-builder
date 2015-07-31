@@ -41,6 +41,13 @@ var FormComponentContent = React.createClass({
         this.setState(newState);
     },
 
+    _handleSourcePathChange: function () {
+        var newState = {
+            componentSourcePath: this.refs.componentSourcePath.getValue()
+        };
+        this.setState(newState);
+    },
+
     _handleBackStep: function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -60,7 +67,12 @@ var FormComponentContent = React.createClass({
     getOptions: function () {
         return {
             includeChildren: this.refs.includeChildrenCheckbox.getChecked(),
-            includeFlux: this.refs.includeFluxCheckbox.getChecked()
+            //includeFlux: this.refs.includeFluxCheckbox.getChecked(),
+            // Generating (Re)Flux components is currently disabled because:
+            // - Generating incorrect paths with our project structure
+            // - Not currently used in our project
+            includeFlux: false,
+            componentSourcePath: this.refs.componentSourcePath.getValue()
             //includeAllReferences: this.refs.includeAllReferencesCheckbox.getChecked()
         }
     },
@@ -69,7 +81,8 @@ var FormComponentContent = React.createClass({
         return {
             includeChildren: this.props.includeChildren,
             includeFlux: this.props.includeFlux,
-            includeAllReferences: this.props.includeAllReferences
+            includeAllReferences: this.props.includeAllReferences,
+            componentSourcePath: this.props.componentSourcePath
         }
     },
 
@@ -100,12 +113,21 @@ var FormComponentContent = React.createClass({
                                     checked={this.state.includeChildren}
                                     onChange={this._handleIncludeChildrenChange}
                                     label="Include children into component code"/>
+                                  <Input
+                                    type="text"
+                                    ref="componentSourcePath"
+                                    label="Component source filename"
+                                    value={this.state.componentSourcePath}
+                                    onChange={this._handleSourcePathChange} />
+                                  {/*
+                                  Not currently supported for this project
                                 <Input
                                     type="checkbox"
                                     ref="includeFluxCheckbox"
                                     checked={this.state.includeFlux}
                                     onChange={this._handleIncludeFluxChange}
                                     label="Include Reflux actions and store into component code"/>
+                                    */}
                                 {/*<Input
                                  type="checkbox"
                                  ref="includeAllReferencesCheckbox"

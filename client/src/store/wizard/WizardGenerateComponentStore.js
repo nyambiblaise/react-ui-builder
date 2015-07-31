@@ -15,6 +15,7 @@ var defaultModel = {
     step: 0,
     includeChildren: true,
     includeFlux: false,
+    componentSourcePath: "",
     errors: []
 };
 
@@ -55,9 +56,11 @@ var WizardGenerateComponentStore = Reflux.createStore({
                 'There is already a component with name: ' + componentName + '. Please specify another component name.'
             );
         }
+        var componentSourcePath = Repository.getDefaultPathFor('componentSource', componentName, componentGroup);
         if(this.model.errors.length === 0){
             this.model.componentGroup = componentGroup;
             this.model.componentName = componentName;
+            this.model.componentSourcePath = componentSourcePath;
             this.onStartStep1();
         } else {
             this.trigger(this.model);
@@ -73,6 +76,8 @@ var WizardGenerateComponentStore = Reflux.createStore({
 
         this.model.includeChildren = options.includeChildren;
         this.model.includeFlux = options.includeFlux;
+
+        this.model.componentSourcePath = options.componentSourcePath;
 
         var _componentName = this.model.componentName;
         if (_componentName && _componentName.length > 0) {
@@ -130,6 +135,9 @@ var WizardGenerateComponentStore = Reflux.createStore({
                                 {
                                     componentGroup: this.model.componentGroup,
                                     componentName: this.model.componentName,
+                                    componentSourcePath: this.model.componentSourcePath,
+                                    actionsPath: this.model.actionsPath,
+                                    storePath: this.model.storePath,
                                     sourceCode: sourceCode,
                                     actionsSourceCode: actionsSourceCode,
                                     storeSourceCode: storeSourceCode
@@ -145,6 +153,7 @@ var WizardGenerateComponentStore = Reflux.createStore({
                         {
                             componentGroup: this.model.componentGroup,
                             componentName: this.model.componentName,
+                            componentSourcePath: this.model.componentSourcePath,
                             sourceCode: sourceCode
                         }
                     );

@@ -141,6 +141,9 @@ var ModalComponentEditorTriggerStore = Reflux.createStore({
                             sourceCode: options.sourceCode,
                             componentGroup: this.model.componentGroup,
                             componentName: this.model.componentName,
+                            paths: {
+                              componentSource: this.model.componentSourcePath
+                            },
                             actionsSourceCode: options.actionsSourceCode,
                             storeSourceCode: options.storeSourceCode
                         },
@@ -175,6 +178,9 @@ var ModalComponentEditorTriggerStore = Reflux.createStore({
                         {
                             componentGroup: this.model.componentGroup,
                             componentName: this.model.componentName,
+                            paths: {
+                              componentSource: this.model.componentSourcePath
+                            },
                             sourceCode: options.sourceCode,
                             actionsSourceCode: options.actionsSourceCode,
                             storeSourceCode: options.storeSourceCode
@@ -243,6 +249,7 @@ var ModalComponentEditorTriggerStore = Reflux.createStore({
 
         this.model.componentGroup = options.componentGroup;
         this.model.componentName = options.componentName;
+        this.model.componentSourcePath = options.componentSourcePath;
         this.model.actionsSourceCode = options.actionsSourceCode;
         this.model.storeSourceCode = options.storeSourceCode;
         this.model.sourceCode = options.sourceCode;
