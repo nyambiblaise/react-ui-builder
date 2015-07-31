@@ -31,20 +31,20 @@ function getVariables(ast){
         if(node.type === 'VariableDeclarator' && node.id.type === 'Identifier'){
             //
             var variable = null;
-            if(node.init.type === 'CallExpression' && node.init.callee.name === 'require'){
+            if(node.init && node.init.type === 'CallExpression' && node.init.callee.name === 'require'){
                 variable = {};
                 variable.name = node.id.name;
                 variable.type = 'require';
                 variable.range = node.range;
                 variables[variable.name] = variable;
                 //
-            } else if(node.init.type === 'MemberExpression'){
+            } else if(node.init && node.init.type === 'MemberExpression'){
                 variable = {};
                 variable.name = node.id.name;
                 variable.type = 'reference';
                 variable.range = node.range;
                 variables[variable.name] = variable;
-            } else if(node.init.type === 'Identifier'){
+            } else if(node.init && node.init.type === 'Identifier'){
                 variable = {};
                 variable.name = node.id.name;
                 variable.type = 'reference';
