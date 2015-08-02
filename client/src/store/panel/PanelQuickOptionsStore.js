@@ -72,6 +72,22 @@ var PanelQuickOptionsStore = Reflux.createStore({
 
     },
 
+    onChangeProps: function(newProps) {
+        var projectModel = Repository.getCurrentProjectModel();
+        var searchResult = null;
+        for(var i = 0; i < projectModel.pages.length; i++){
+            if(!searchResult){
+                searchResult = Common.findByUmyId(projectModel.pages[i], this.model.selectedUmyId);
+            }
+        }
+        if(searchResult){
+            searchResult.found.props = searchResult.found.props || {};
+            searchResult.found.props = _.extend(searchResult.found.props, newProps);
+            Repository.renewCurrentProjectModel(projectModel);
+            DeskPageFrameActions.renderPageFrame();
+        }
+    },
+
     onProbeAction: function() {
         this.trigger(this.model);
     }

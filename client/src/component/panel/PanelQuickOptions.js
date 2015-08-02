@@ -7,6 +7,7 @@ var ReactBootstrap = require('react-bootstrap');
 var PanelQuickOptionsStore = require('../../store/panel/PanelQuickOptionsStore.js');
 var PanelQuickOptionsActions = require('../../action/panel/PanelQuickOptionsActions.js');
 var StylePanel = require('./StylePanel.js');
+var PropEditorPanel = require('./PropEditorPanel.js');
 
 var Panel = ReactBootstrap.Panel;
 var PanelGroup = ReactBootstrap.PanelGroup;
@@ -246,6 +247,9 @@ var PanelQuickOptions = React.createClass({
             }.bind(this));
             panelContent = (
                 <div style={style}>
+                    <PanelGroup accordion={true}>
+                      <PropEditorPanel props={this.state.props} />
+                    </PanelGroup>
                     <PanelGroup accordion={true}
                                 defaultActiveKey={this.state.activeStylePanel}
                                 onSelect={this._handleStylePanelSelected}>

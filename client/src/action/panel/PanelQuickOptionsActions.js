@@ -6,6 +6,7 @@ var PanelQuickOptionsActions = Reflux.createActions([
     'setActiveLayout',
     'selectItem',
     'deselectItem',
+    'changeProps',
     'changeStyleOptions',
     'removeStyleOptions',
     'probeAction'

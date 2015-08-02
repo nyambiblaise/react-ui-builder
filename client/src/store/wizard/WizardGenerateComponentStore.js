@@ -166,4 +166,3 @@ var WizardGenerateComponentStore = Reflux.createStore({
 });
 
 module.exports = WizardGenerateComponentStore;
-
