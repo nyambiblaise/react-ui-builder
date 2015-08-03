@@ -23,12 +23,14 @@ var PanelQuickOptionsStore = Reflux.createStore({
     onSelectItem: function(modelNode, selectedUmyId){
         this.model.selectedUmyId = selectedUmyId;
         this.model.props = modelNode.found.props;
+        this.model.componentType = modelNode.found.type;
         this.trigger(this.model);
     },
 
     onDeselectItem: function(){
         this.model.selectedUmyId = null;
         this.model.props = null;
+        this.model.componentType = null;
         this.trigger(this.model);
     },
 
@@ -83,6 +85,27 @@ var PanelQuickOptionsStore = Reflux.createStore({
         if(searchResult){
             searchResult.found.props = searchResult.found.props || {};
             searchResult.found.props = _.extend(searchResult.found.props, newProps);
+            Repository.renewCurrentProjectModel(projectModel);
+            DeskPageFrameActions.renderPageFrame();
+        }
+    },
+
+    onOverrideProps: function(newProps) {
+        var projectModel = Repository.getCurrentProjectModel();
+        var searchResult = null;
+        for(var i = 0; i < projectModel.pages.length; i++){
+            if(!searchResult){
+                searchResult = Common.findByUmyId(projectModel.pages[i], this.model.selectedUmyId);
+            }
+        }
+        if(searchResult){
+            searchResult.found.props = searchResult.found.props || {};
+            // Even if overriding, need to keep the umyid
+            var umyId = searchResult.found.props['data-umyid'];
+            var keep = {
+              'data-umyid': umyId
+            }
+            searchResult.found.props = _.extend(newProps, keep);
             Repository.renewCurrentProjectModel(projectModel);
             DeskPageFrameActions.renderPageFrame();
         }

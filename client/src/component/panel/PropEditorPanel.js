@@ -5,6 +5,8 @@ var _ = require('underscore');
 var ReactBootstrap = require('react-bootstrap');
 var Panel = ReactBootstrap.Panel;
 
+var VariantSwitcher = require('../element/VariantSwitcher.js');
+
 var NumericSpinnerProperty = require('../element/NumericSpinnerProperty.js');
 var DigitalProperty = require('../element/DigitalProperty.js');
 var TextProperty = require('../element/TextProperty.js');
@@ -21,6 +23,10 @@ var PropEditorPanel = React.createClass({
         var newProps = {};
         newProps[name] = value;
         PanelQuickOptionsActions.changeProps(newProps);
+    },
+
+    _handleSelectVariant: function(e){
+        PanelQuickOptionsActions.overrideProps(e.props);
     },
 
     _createListOfElements: function(propertyArray){
@@ -120,6 +126,8 @@ var PropEditorPanel = React.createClass({
         return (
             <Panel header="React Props" collapsable={ true } expanded={ true }>
                 <div style={{ padding: '0.5em 0.5em 1.5em 0.5em' }}>
+                  <VariantSwitcher onSelectVariant={this._handleSelectVariant} />
+
                   <p>{ this._createListOfElements(this.properties) }</p>
                 </div>
             </Panel>
