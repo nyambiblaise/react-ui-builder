@@ -30,16 +30,13 @@ var NumericSpinnerProperty = React.createClass({
     _handleChangeInputValue: function (e) {
         var value = React.findDOMNode(this.refs.inputElement).value;
         if (value !== null && typeof value !== 'undefined' && value.length > 0) {
-            value = value.replace(/,/, '.');
-            var checkChar = value.charAt(value.length - 1);
-            if(checkChar !== '.' && checkChar !== '0'){
-                value = parseFloat(value);
-                if(!value){
-                    value = 0;
-                }
+            value = value.replace(',', '');
+            value = parseFloat(value);
+            if(!value){
+                value = 0;
             }
         } else {
-            value = null;
+            value = 0;
         }
         this.setState({
             inputValue: value
