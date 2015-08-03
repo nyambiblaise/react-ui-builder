@@ -4,9 +4,13 @@ var _ = require('underscore');
 
 var ReactBootstrap = require('react-bootstrap');
 var Panel = ReactBootstrap.Panel;
+
 var NumericSpinnerProperty = require('../element/NumericSpinnerProperty.js');
 var DigitalProperty = require('../element/DigitalProperty.js');
 var TextProperty = require('../element/TextProperty.js');
+var ObjectProperty = require('../element/ObjectProperty.js');
+var ArrayProperty = require('../element/ArrayProperty.js');
+
 var PanelQuickOptionsActions = require('../../action/panel/PanelQuickOptionsActions.js');
 
 var PropEditorPanel = React.createClass({
@@ -59,6 +63,26 @@ var PropEditorPanel = React.createClass({
                                      onChangeValue={this._handleChangeProperty}/>
                 );
             }
+
+            if(property.type === 'object') {
+                return (
+                    <ObjectProperty key={'prop' + index}
+                                     style={{marginTop: '1em'}}
+                                     label={property.name}
+                                     inputValue={property.value}
+                                     onChangeValue={this._handleChangeProperty}/>
+                );
+            }
+
+            if(property.type === 'array') {
+                return (
+                    <ArrayProperty key={'prop' + index}
+                                     style={{marginTop: '1em'}}
+                                     label={property.name}
+                                     inputValue={property.value}
+                                     onChangeValue={this._handleChangeProperty}/>
+                );
+            }
         }.bind(this));
         return elements;
     },
@@ -87,6 +111,8 @@ var PropEditorPanel = React.createClass({
             };
             if(_.isNumber(item)) propertyInfo.type = 'number';
             if(_.isBoolean(item)) propertyInfo.type = 'digital';
+            if(_.isObject(item)) propertyInfo.type = 'object';
+            if(_.isArray(item)) propertyInfo.type = 'array';
             if(key === 'data-umyid') propertyInfo.readOnly = true;
             this.properties.push(propertyInfo);
         }.bind(this));
