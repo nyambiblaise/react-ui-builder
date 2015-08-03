@@ -29,7 +29,7 @@ var NumericSpinnerProperty = React.createClass({
 
     _handleChangeInputValue: function (e) {
         var value = React.findDOMNode(this.refs.inputElement).value;
-        if (value && value.length > 0) {
+        if (value !== null && typeof value !== 'undefined' && value.length > 0) {
             value = value.replace(/,/, '.');
             var checkChar = value.charAt(value.length - 1);
             if(checkChar !== '.' && checkChar !== '0'){
@@ -73,7 +73,8 @@ var NumericSpinnerProperty = React.createClass({
     getInitialState: function () {
         var inputValue = null;
         var isDisabled = true;
-        if(this.props.inputValue){
+        if(this.props.inputValue !== null
+          && typeof this.props.inputValue !== 'undefined'){
             inputValue = parseFloat(this.props.inputValue);
             isDisabled = false;
         }
