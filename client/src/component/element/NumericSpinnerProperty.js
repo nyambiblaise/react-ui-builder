@@ -4,34 +4,27 @@ var React = require('react');
 
 var ReactBootstrap = require('react-bootstrap');
 
-var unitsList = ['px', 'em', '%'];
+var NumericSpinnerProperty = React.createClass({
 
-var VerticalSpinnerStyleProperty = React.createClass({
-
-    _handleIncrement: function (e) {
+    /**
+     * _handlerForIncrement returns an event handler for incrementing
+     * or decrementing the inputValue by the specified amount.
+     * _handlerForIncrement(1) => function<1>(event)
+     * _handlerForIncrement(-1) => function<-1>(event)
+     */
+    _handlerForIncrement: function (incrementBy){
+      return function (e) {
         e.stopPropagation();
         e.preventDefault();
         var f = function (){
             var value = this.state.inputValue ? this.state.inputValue : 0;
             this.setState({
-                inputValue: (value + this.props.stepValue)
+                inputValue: (value + incrementBy)
             });
         }.bind(this);
         f();
         this._mouseDownIntervalPid = setInterval(f, 150);
-    },
-
-    _handleDecrement: function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var f = function (){
-            var value = this.state.inputValue ? this.state.inputValue : 0;
-            this.setState({
-                inputValue: (value - this.props.stepValue)
-            });
-        }.bind(this);
-        f();
-        this._mouseDownIntervalPid = setInterval(f, 150);
+      }.bind(this);
     },
 
     _handleChangeInputValue: function (e) {
@@ -57,10 +50,10 @@ var VerticalSpinnerStyleProperty = React.createClass({
         if(this._mouseDownIntervalPid){
             clearInterval(this._mouseDownIntervalPid);
         }
-        this._handleChange(this.state.inputValue, this.state.units);
+        this._handleChange(this.state.inputValue);
     },
 
-    _handleChange: function(inputValue, units){
+    _handleChange: function(inputValue){
         if(this.props.onChangeValue){
             this.props.onChangeValue({
                 target: {
@@ -74,25 +67,6 @@ var VerticalSpinnerStyleProperty = React.createClass({
     _handleOnKeyDown: function(e){
         if(e.keyCode == 13 || e.keyCode == 27){
             this._handleBlur();
-        }
-    },
-
-    _handleDisabled: function(e){
-        e.stopPropagation();
-        if(this.props.onRemoveValue){
-            if(!this.state.isDisabled){
-                this.props.onRemoveValue({
-                    target: {
-                        name: this.props.label
-                    }
-                })
-            } else {
-                this._handleChange(5, unitsList[0]);
-            }
-        } else {
-            this.setState({
-                isDisabled: !this.state.isDisabled
-            });
         }
     },
 
@@ -130,14 +104,14 @@ var VerticalSpinnerStyleProperty = React.createClass({
                                     <button className="btn btn-default btn-xs"
                                             type="button"
                                             disabled={this.state.isDisabled}
-                                            onMouseDown={this._handleIncrement}
+                                            onMouseDown={this._handlerForIncrement(1)}
                                             onMouseUp={this._handleBlur}>
                                         <span className="fa fa-plus"></span>
                                     </button>
                                     <button className="btn btn-default btn-xs"
                                             type="button"
                                             disabled={this.state.isDisabled}
-                                            onMouseDown={this._handleDecrement}
+                                            onMouseDown={this._handlerForIncrement(-1)}
                                             onMouseUp={this._handleBlur}>
                                         <span className="fa fa-minus"></span>
                                     </button>
@@ -162,4 +136,4 @@ var VerticalSpinnerStyleProperty = React.createClass({
 
 });
 
-module.exports = VerticalSpinnerStyleProperty;
+module.exports = NumericSpinnerProperty;

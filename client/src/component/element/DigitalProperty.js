@@ -6,7 +6,13 @@ var ReactBootstrap = require('react-bootstrap');
 var Button = ReactBootstrap.Button;
 
 var DigitalProperty = React.createClass({
-    _handleSet: function(newValue){
+    /**
+     * _handlerForSet returns a handler function
+     * for changing the digital value to true or false.
+     * _handlerForSetValue(true) => function<true>(event)
+     * _handlerForSetValue(false) => function<false>(event)
+     */
+    _handlerForSetValue: function(newValue){
       return function(event){
         this.setState({
           inputValue: newValue
@@ -22,31 +28,6 @@ var DigitalProperty = React.createClass({
                     name: this.props.label,
                     value: inputValue
                 }
-            });
-        }
-    },
-
-    _handleOnKeyDown: function(e){
-        if(e.keyCode == 13 || e.keyCode == 27){
-            this._handleBlur();
-        }
-    },
-
-    _handleDisabled: function(e){
-        e.stopPropagation();
-        if(this.props.onRemoveValue){
-            if(!this.state.isDisabled){
-                this.props.onRemoveValue({
-                    target: {
-                        name: this.props.label
-                    }
-                })
-            } else {
-                this._handleChange(5, unitsList[0]);
-            }
-        } else {
-            this.setState({
-                isDisabled: !this.state.isDisabled
             });
         }
     },
@@ -79,14 +60,14 @@ var DigitalProperty = React.createClass({
                                             type="button"
                                             active={this.state.inputValue === true}
                                             disabled={this.state.isDisabled}
-                                            onClick={this._handleSet(true)}>
+                                            onClick={this._handlerForSetValue(true)}>
                                         <span>True</span>
                                     </Button>
                                     <Button className="btn btn-default btn-xs"
                                             type="button"
                                             active={this.state.inputValue === false}
                                             disabled={this.state.isDisabled}
-                                            onClick={this._handleSet(false)}>
+                                            onClick={this._handlerForSetValue(false)}>
                                         <span>False</span>
                                     </Button>
                                 </div>
