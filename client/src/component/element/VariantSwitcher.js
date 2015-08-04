@@ -70,7 +70,7 @@ var VariantSwitcher = React.createClass({
         var variantList = _.map(this.state.variants, function(variant, index){
           var variantName = variant.variantName || 'Variant #' + index
             return (
-              <MenuItem eventKey={'variant'+index}
+              <MenuItem key={'variant'+index} eventKey={'variant'+index}
                 onClick={ this._handlerForClickVariant(variant) }>{ variantName }</MenuItem>
             );
         }.bind(this));
