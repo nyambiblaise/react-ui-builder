@@ -7,12 +7,18 @@ var ReactBootstrap = require('react-bootstrap');
 var PanelQuickOptionsStore = require('../../store/panel/PanelQuickOptionsStore.js');
 var Server = require('../../api/Server.js');
 
+var ButtonGroup = ReactBootstrap.ButtonGroup;
+var Button = ReactBootstrap.Button;
+var DropdownButton = ReactBootstrap.DropdownButton;
+var MenuItem = ReactBootstrap.MenuItem;
+var Glyphicon = ReactBootstrap.Glyphicon;
+
 /**
  * This component provides a quick way to switch component variants after
  * the component has been placed on the page
  */
 var VariantSwitcher = React.createClass({
-    _handleClickVariant: function(variant) {
+    _handlerForClickVariant: function(variant) {
         return function(event){
             console.log("Selected variant", variant);
             if(this.props.onSelectVariant){
@@ -66,19 +72,15 @@ var VariantSwitcher = React.createClass({
         var variantList = _.map(this.state.variants, function(variant, index){
           var variantName = variant.variantName || 'Variant #' + index
             return (
-              <li key={'variant'+index}>
-                <a href="javascript:;"
-                   onClick={this._handleClickVariant(variant)}>
-                   { variantName }
-                 </a>
-              </li>
+              <MenuItem eventKey={'variant'+index}
+                onClick={ this._handlerForClickVariant(variant) }>{ variantName }</MenuItem>
             );
         }.bind(this));
 
         return (
-          <ul>
+            <DropdownButton title="Load Variant" key="btnSelectVariant">
               {variantList}
-          </ul>
+            </DropdownButton>
         );
     }
 });
