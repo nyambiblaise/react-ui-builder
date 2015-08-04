@@ -247,12 +247,10 @@ var PanelQuickOptions = React.createClass({
             }.bind(this));
             panelContent = (
                 <div style={style}>
-                    <PanelGroup accordion={true}>
-                      <PropEditorPanel props={this.state.props} />
-                    </PanelGroup>
                     <PanelGroup accordion={true}
                                 defaultActiveKey={this.state.activeStylePanel}
                                 onSelect={this._handleStylePanelSelected}>
+                        <PropEditorPanel props={this.state.props} key="propEditorPanel" />
                         {stylePanels}
                     </PanelGroup>
                 </div>
