@@ -183,7 +183,6 @@ var ApplicationStore = Reflux.createStore({
                         self.onGoToErrors(errors);
                       },
                       function(response){
-                        console.log("readDefaultNewComponentPaths response:", response);
                         Repository.setDefaultNewComponentPaths(response);
                       }
                     );

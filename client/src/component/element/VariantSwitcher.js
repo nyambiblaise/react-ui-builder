@@ -20,7 +20,6 @@ var Glyphicon = ReactBootstrap.Glyphicon;
 var VariantSwitcher = React.createClass({
     _handlerForClickVariant: function(variant) {
         return function(event){
-            console.log("Selected variant", variant);
             if(this.props.onSelectVariant){
                 this.props.onSelectVariant({
                     props: variant.props
@@ -40,7 +39,6 @@ var VariantSwitcher = React.createClass({
     },
 
     onModelChange: function (modelNode) {
-        console.log('VariantSwitcher.onModelChange', modelNode);
         this._loadVariants(modelNode.componentType);
     },
 
@@ -51,7 +49,7 @@ var VariantSwitcher = React.createClass({
         }else{
             Server.invoke('loadComponentDefaults', {componentName: componentType},
             function(err){
-              console.log('Error loading defaults:', err);
+              console.error('Error loading defaults:', err);
             },
             function(data){
               this.setState({variants: data.model});
