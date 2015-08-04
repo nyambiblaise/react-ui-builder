@@ -242,7 +242,8 @@ var PanelQuickOptions = React.createClass({
                                 styleProps={StyleGroups[prop].array}
                                 split={StyleGroups[prop].split}
                                 activeStylePane={this.state.activeStylePane}
-                                eventKey={eventKey++}/>
+                                eventKey={eventKey++}
+                                key={eventKey}/>
                 );
             }.bind(this));
             panelContent = (
