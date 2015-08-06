@@ -52,7 +52,6 @@ var PanelQuickOptionsStore = Reflux.createStore({
             Repository.renewCurrentProjectModel(projectModel);
             DeskPageFrameActions.renderPageFrame();
             this.trigger(this.model);
-            console.log("Trigger render", this.model);
         }
         //console.log(JSON.stringify(newStyle, null, 4));
     },
@@ -98,7 +97,6 @@ var PanelQuickOptionsStore = Reflux.createStore({
             DeskPageFrameActions.renderPageFrame();
             this.model.props = searchResult.found.props;
             this.trigger(this.model);
-            console.log("Trigger render", this.model);
         }
     },
 
@@ -122,7 +120,6 @@ var PanelQuickOptionsStore = Reflux.createStore({
             DeskPageFrameActions.renderPageFrame();
             this.model.props = searchResult.found.props;
             this.trigger(this.model);
-            console.log("Trigger render on override", this.model);
         }
     },
 

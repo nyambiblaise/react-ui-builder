@@ -118,7 +118,6 @@ var PropEditorPanel = React.createClass({
         });
 
         var elements = this._createListOfElements(properties);
-        console.log("Rendering PropEditorPanel", properties);
 
         return (
             <Panel header="React Props" collapsable={ true } expanded={ true } key="panelReactProps">

@@ -216,8 +216,6 @@ var PanelQuickOptions = React.createClass({
         };
         var panelContent = null;
         if(this.state.props){
-            console.log("Render props", this.state.props);
-
             var propsStyle = this.state.props.style;
             // clear all groups
             _.mapObject(StyleGroups, function(value, prop){
