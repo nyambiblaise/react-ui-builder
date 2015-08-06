@@ -69,6 +69,20 @@ var DeskPageFrameStore = Reflux.createStore({
     },
 
     onSelectComponentById: function(domNodeId){
+        if(typeof domNodeId === 'undefined' || domNodeId === null) {
+          return;
+        }
+
+        console.log("Current selectUmyId:", this.model.selectedUmyId, "New dom node ID:", domNodeId);
+        // If this component is already selected, no need to select again
+        if(this.model.selectedUmyId == domNodeId) {
+          return;
+        }
+
+        // If another component is already selected, deselect it first
+        if(this.model.selectedUmyId !== null){
+          this.onDeselectComponent();
+        }
 
         // try to select previously selected domNode
         this.model.selectedUmyId = domNodeId || this.model.selectedUmyId;
@@ -100,7 +114,7 @@ var DeskPageFrameStore = Reflux.createStore({
     },
 
     onDeselectComponent: function(){
-        //this.model.selectedUmyId = null;
+        this.model.selectedUmyId = null;
         if(componentOverlay){
             componentOverlay.destroy();
             componentOverlay = null;

@@ -8,7 +8,7 @@ var SelectStyleProperty = React.createClass({
 
     getInitialState: function(){
         return {
-            isDisabled: this.props.value ? false : true
+            value: this.props.value
         }
     },
 
@@ -24,24 +24,26 @@ var SelectStyleProperty = React.createClass({
 
     _handleDisabled: function(e){
         e.stopPropagation();
-        if(this.props.onRemoveValue){
-            if(!this.state.isDisabled){
-                this.props.onRemoveValue({
-                    target: {
-                        name: this.props.label
-                    }
-                })
-            } else {
-                this._handleChange(this.props.listValue[0].value);
-            }
+        if(this._isDisabled()){
+            this._handleChange(this.props.listValue[0].value);
         } else {
-            this.setState({
-                isDisabled: !this.state.isDisabled
-            });
+            this._handleChange(null);
+
+            if(this.props.onRemoveValue){
+              this.props.onRemoveValue({
+                  target: {
+                      name: this.props.label
+                  }
+              });
+            }
         }
     },
 
     _handleChange: function(val){
+        this.setState({
+          value: val
+        });
+
         if(this.props.onChangeValue){
             this.props.onChangeValue({
                 target: {
@@ -52,9 +54,15 @@ var SelectStyleProperty = React.createClass({
         }
     },
 
+    _isDisabled: function(){
+        return this.state.value === null || typeof this.state.value === 'undefined';
+    },
+
     render: function() {
-        var _value = this.props.value;
-        if(this.state.isDisabled){
+        var _isDisabled = this._isDisabled();
+
+        var _value = this.state.value;
+        if(_isDisabled){
             _value = '';
         }
         return (
@@ -65,13 +73,13 @@ var SelectStyleProperty = React.createClass({
                         <div style={{display: 'table-cell', width: '10%', textAlign: 'left', verticalAlign: 'middle'}}>
                             <input type='checkbox'
                                    style={{margin: '0'}}
-                                   checked={!this.state.isDisabled}
+                                   checked={!_isDisabled}
                                    onChange={this._handleDisabled} />
                         </div>
                         <div style={{display: 'table-cell', width: '80%', paddingLeft: '15px', paddingRight: '15px'}}>
                             <Select options={this.props.listValue}
                                     clearable={false}
-                                    disabled={this.state.isDisabled}
+                                    disabled={_isDisabled}
                                     value={_value}
                                     onChange={this._handleChange}/>
                         </div>

@@ -123,12 +123,15 @@ var PropEditorPanel = React.createClass({
             this.properties.push(propertyInfo);
         }.bind(this));
 
+        var elements = this._createListOfElements(this.properties);
+        console.log("Rendering PropEditorPanel", this.properties);
+
         return (
-            <Panel header="React Props" collapsable={ true } expanded={ true }>
+            <Panel header="React Props" collapsable={ true } expanded={ true } key="panelReactProps">
                 <div style={{ padding: '0.5em 0.5em 1.5em 0.5em' }}>
                   <VariantSwitcher onSelectVariant={this._handleSelectVariant} />
 
-                  <p>{ this._createListOfElements(this.properties) }</p>
+                  <p>{ elements }</p>
                 </div>
             </Panel>
         );

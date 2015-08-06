@@ -81,7 +81,7 @@ var DeskPageFrame = React.createClass({
                 this._mapDomNodes();
             }.bind(this);
             this.frameEndpoint.onComponentWillUpdate = function(){
-                DeskPageFrameActions.deselectComponent();
+                //DeskPageFrameActions.deselectComponent();
             };
             this._changeFrameContent();
 
@@ -126,7 +126,7 @@ var DeskPageFrame = React.createClass({
                                         e.stopPropagation();
                                         e.preventDefault();
                                         //console.log(e.metaKey);
-                                        DeskPageFrameActions.deselectComponent();
+                                        //DeskPageFrameActions.deselectComponent();
                                         DeskPageFrameActions.selectComponentById(_dataumyid);
                                     }
                                 };

@@ -34,8 +34,11 @@ var PanelQuickOptionsStore = Reflux.createStore({
         this.trigger(this.model);
     },
 
+    /**
+     * The 'changeStyleOptions' action is triggered when a style property
+     * is changed from the style sidebar panels
+     */
     onChangeStyleOptions: function(newStyle){
-
         var projectModel = Repository.getCurrentProjectModel();
         var searchResult = null;
         for(var i = 0; i < projectModel.pages.length; i++){
@@ -48,10 +51,16 @@ var PanelQuickOptionsStore = Reflux.createStore({
             searchResult.found.props.style = _.extend(searchResult.found.props.style, newStyle);
             Repository.renewCurrentProjectModel(projectModel);
             DeskPageFrameActions.renderPageFrame();
+            this.trigger(this.model);
+            console.log("Trigger render", this.model);
         }
         //console.log(JSON.stringify(newStyle, null, 4));
     },
 
+    /**
+     * The 'removeStyleOptions' action is triggered when style property
+     * is disabled using a checkbox from the style sidebar panels
+     */
     onRemoveStyleOptions: function(removeStyle){
         var projectModel = Repository.getCurrentProjectModel();
         var searchResult = null;
@@ -87,6 +96,8 @@ var PanelQuickOptionsStore = Reflux.createStore({
             searchResult.found.props = _.extend(searchResult.found.props, newProps);
             Repository.renewCurrentProjectModel(projectModel);
             DeskPageFrameActions.renderPageFrame();
+            this.trigger(this.model);
+            console.log("Trigger render", this.model);
         }
     },
 
@@ -108,6 +119,9 @@ var PanelQuickOptionsStore = Reflux.createStore({
             searchResult.found.props = _.extend(newProps, keep);
             Repository.renewCurrentProjectModel(projectModel);
             DeskPageFrameActions.renderPageFrame();
+            this.model.props = searchResult.found.props;
+            this.trigger(this.model);
+            console.log("Trigger render on override", this.model);
         }
     },
 

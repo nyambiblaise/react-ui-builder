@@ -216,6 +216,7 @@ var PanelQuickOptions = React.createClass({
         };
         var panelContent = null;
         if(this.state.props){
+            console.log("Render props", this.state.props);
 
             var propsStyle = this.state.props.style;
             // clear all groups
@@ -242,15 +243,16 @@ var PanelQuickOptions = React.createClass({
                                 styleProps={StyleGroups[prop].array}
                                 split={StyleGroups[prop].split}
                                 activeStylePane={this.state.activeStylePane}
-                                eventKey={eventKey++}
-                                key={eventKey}/>
+                                eventKey={prop}
+                                key={prop}/>
                 );
             }.bind(this));
             panelContent = (
                 <div style={style}>
                     <PanelGroup accordion={true}
                                 defaultActiveKey={this.state.activeStylePanel}
-                                onSelect={this._handleStylePanelSelected}>
+                                onSelect={this._handleStylePanelSelected}
+                                key="quickOptionsPanelGroup">
                         <PropEditorPanel props={this.state.props} key="propEditorPanel" />
                         {stylePanels}
                     </PanelGroup>
