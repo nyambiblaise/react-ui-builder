@@ -5,26 +5,35 @@ var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
 var TextProperty = React.createClass({
-    _handleChange: function(inputValue){
+    _handleOnChange: function(e){
+        this._setValue(e.target.value);
+    },
+
+    _setValue: function(newValue) {
+        this.setState({
+            inputValue: newValue
+        });
+
         if(this.props.onChangeValue){
             this.props.onChangeValue({
                 target: {
                     name: this.props.label,
-                    value: inputValue
+                    value: newValue
                 }
             });
         }
     },
 
-    _handleOnChange: function(e){
-      this._handleChange(e.target.value);
+    componentWillReceiveProps: function(newProps) {
+        this.setState({
+            inputValue: newProps.inputValue
+        });
     },
 
     getInitialState: function () {
         return {
-            inputValue: this.props.inputValue,
-            isDisabled: false
-        }
+            inputValue: this.props.inputValue
+        };
     },
 
     getDefaultProps: function () {
@@ -45,9 +54,8 @@ var TextProperty = React.createClass({
                             <input
                                 type="text"
                                 ref="input"
-                                disabled={this.state.isDisabled}
-                                defaultValue={this.state.inputValue}
-                                onBlur={this._handleOnChange} />
+                                value={this.state.inputValue}
+                                onChange={this._handleOnChange} />
                         </div>
                     </div>
                 </div>
