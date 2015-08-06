@@ -17,11 +17,11 @@ var DigitalProperty = React.createClass({
         this.setState({
           inputValue: newValue
         });
-        this._handleChange(newValue);
+        this._handleOnChange(newValue);
       }.bind(this);
     },
 
-    _handleChange: function(inputValue){
+    _handleOnChange: function(inputValue){
         if(this.props.onChangeValue){
             this.props.onChangeValue({
                 target: {
@@ -30,6 +30,12 @@ var DigitalProperty = React.createClass({
                 }
             });
         }
+    },
+
+    componentWillReceiveProps: function(newProps) {
+      this.setState({
+        inputValue: newProps.inputValue
+      });
     },
 
     getInitialState: function () {
