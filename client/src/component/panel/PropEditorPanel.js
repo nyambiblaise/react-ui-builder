@@ -15,8 +15,13 @@ var ArrayProperty = require('../element/ArrayProperty.js');
 
 var PanelQuickOptionsActions = require('../../action/panel/PanelQuickOptionsActions.js');
 
+/**
+ * This defines a sidebar panel for quickly changing property values
+ * of components from inside the builder
+ */
 var PropEditorPanel = React.createClass({
 
+    // Handler for when the user changes one of the property values
     _handleChangeProperty: function(e){
         var name = e.target.name;
         var value = e.target.value;
@@ -25,23 +30,21 @@ var PropEditorPanel = React.createClass({
         PanelQuickOptionsActions.changeProps(newProps);
     },
 
+    // Handler for the user selecting a new variant
     _handleSelectVariant: function(e){
         PanelQuickOptionsActions.overrideProps(e.props);
     },
 
+    // Creates property editor components based on property metadata
     _createListOfElements: function(propertyArray){
-        var elements = propertyArray.map(function(property, index){
-            if(property.name === 'data-umyid') {
-                // umyid property is for internal use only
+        var elements = propertyArray.map((property, index) => {
+            if(property.type === null) {
                 return;
             }
-            if(property.name === 'style') {
-                // Style properties are edited by the other panels
-                return;
-            }
+
             if(property.type === 'digital'){
                 return (
-                    <DigitalProperty key={'prop' + index}
+                    <DigitalProperty key={'prop' + property.name}
                                      style={{marginTop: '1em'}}
                                      label={property.name}
                                      inputValue={property.value}
@@ -52,7 +55,7 @@ var PropEditorPanel = React.createClass({
 
             if(property.type === 'number') {
                 return (
-                    <NumericSpinnerProperty key={'prop' + index}
+                    <NumericSpinnerProperty key={'prop' + property.name}
                                      style={{marginTop: '1em'}}
                                      label={property.name}
                                      inputValue={property.value}
@@ -62,7 +65,7 @@ var PropEditorPanel = React.createClass({
 
             if(property.type === 'text') {
                 return (
-                    <TextProperty key={'prop' + index}
+                    <TextProperty key={'prop' + property.name}
                                      style={{marginTop: '1em'}}
                                      label={property.name}
                                      inputValue={property.value}
@@ -72,7 +75,7 @@ var PropEditorPanel = React.createClass({
 
             if(property.type === 'object') {
                 return (
-                    <ObjectProperty key={'prop' + index}
+                    <ObjectProperty key={'prop' + property.name}
                                      style={{marginTop: '1em'}}
                                      label={property.name}
                                      inputValue={property.value}
@@ -82,33 +85,20 @@ var PropEditorPanel = React.createClass({
 
             if(property.type === 'array') {
                 return (
-                    <ArrayProperty key={'prop' + index}
+                    <ArrayProperty key={'prop' + property.name}
                                      style={{marginTop: '1em'}}
                                      label={property.name}
                                      inputValue={property.value}
                                      onChangeValue={this._handleChangeProperty}/>
                 );
             }
-        }.bind(this));
+        });
         return elements;
     },
 
-    getInitialState: function(){
-        return {
-            activeStylePane: this.props.activeStylePane
-        }
-    },
-
-    componentDidMount: function(){
-        $(React.findDOMNode(this)).find('.panel-body').css({
-            'padding': '5px'
-        });
-    },
-
     render: function() {
-        // Gather information about the selected component's properties
-        this.properties = [];
-        _.map(this.props.props, function(item, key){
+        // Gather metadata about the component's properties
+        var properties = _.map(this.props.props, (item, key) => {
             var propertyInfo = {
               name: key,
               value: item,
@@ -119,17 +109,21 @@ var PropEditorPanel = React.createClass({
             if(_.isBoolean(item)) propertyInfo.type = 'digital';
             if(_.isObject(item)) propertyInfo.type = 'object';
             if(_.isArray(item)) propertyInfo.type = 'array';
-            if(key === 'data-umyid') propertyInfo.readOnly = true;
-            this.properties.push(propertyInfo);
-        }.bind(this));
 
-        var elements = this._createListOfElements(this.properties);
-        console.log("Rendering PropEditorPanel", this.properties);
+            // Hide the following props
+            if(key === 'data-umyid') propertyInfo.type = null;
+            if(key === 'style') propertyInfo.type = null;
+
+            return propertyInfo;
+        });
+
+        var elements = this._createListOfElements(properties);
+        console.log("Rendering PropEditorPanel", properties);
 
         return (
             <Panel header="React Props" collapsable={ true } expanded={ true } key="panelReactProps">
-                <div style={{ padding: '0.5em 0.5em 1.5em 0.5em' }}>
-                  <VariantSwitcher onSelectVariant={this._handleSelectVariant} />
+                <div>
+                  <VariantSwitcher onSelectVariant={this._handleSelectVariant} key="variantSwitcher" />
 
                   <p>{ elements }</p>
                 </div>
