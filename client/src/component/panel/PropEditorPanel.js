@@ -124,7 +124,7 @@ var PropEditorPanel = React.createClass({
                 <div>
                   <VariantSwitcher onSelectVariant={this._handleSelectVariant} key="variantSwitcher" />
 
-                  <p>{ elements }</p>
+                  { elements }
                 </div>
             </Panel>
         );
