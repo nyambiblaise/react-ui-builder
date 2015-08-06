@@ -13,72 +13,60 @@ var NumericSpinnerProperty = React.createClass({
      * _handlerForIncrement(-1) => function<-1>(event)
      */
     _handlerForIncrement: function (incrementBy){
-      return function (e) {
+      return (e) => {
         e.stopPropagation();
         e.preventDefault();
-        var f = function (){
-            var value = this.state.inputValue ? this.state.inputValue : 0;
-            this.setState({
-                inputValue: (value + incrementBy)
-            });
-        }.bind(this);
-        f();
-        this._mouseDownIntervalPid = setInterval(f, 150);
-      }.bind(this);
+
+        var incrementedTimes = 0;
+        var multiplier = 1;
+
+        var doIncrement = () => {
+          if(incrementedTimes == 10) {
+            incrementedTimes = 0;
+            multiplier *= 2;
+          }
+
+          this._setValue(this.state.inputValue + (incrementBy * multiplier));
+          incrementedTimes++;
+        };
+
+        doIncrement();
+        this._mouseDownInterval = setInterval(doIncrement, 150);
+      };
     },
 
-    _handleChangeInputValue: function (e) {
-        var value = React.findDOMNode(this.refs.inputElement).value;
-        if (value !== null && typeof value !== 'undefined' && value.length > 0) {
-            value = value.replace(',', '');
-            value = parseFloat(value);
-            if(!value){
-                value = 0;
-            }
-        } else {
-            value = 0;
-        }
+    _stopIncrement: function() {
+        clearInterval(this._mouseDownInterval);
+    },
+
+    _formatValue: function(value) {
+      if(value === '') return 0;
+      return parseFloat(value);
+    },
+
+    _handleChange: function(e) {
+      this._setValue(this._formatValue(e.target.value));
+    },
+
+    _setValue: function(newValue){
         this.setState({
-            inputValue: value
+          inputValue: newValue
         });
-    },
 
-    _handleBlur: function(){
-        if(this._mouseDownIntervalPid){
-            clearInterval(this._mouseDownIntervalPid);
-        }
-        this._handleChange(this.state.inputValue);
-    },
-
-    _handleChange: function(inputValue){
         if(this.props.onChangeValue){
             this.props.onChangeValue({
                 target: {
                     name: this.props.label,
-                    value: inputValue
+                    value: newValue
                 }
             });
         }
     },
 
-    _handleOnKeyDown: function(e){
-        if(e.keyCode == 13 || e.keyCode == 27){
-            this._handleBlur();
-        }
-    },
-
     getInitialState: function () {
-        var inputValue = null;
-        var isDisabled = true;
-        if(this.props.inputValue !== null
-          && typeof this.props.inputValue !== 'undefined'){
-            inputValue = parseFloat(this.props.inputValue);
-            isDisabled = false;
-        }
         return {
-            inputValue: inputValue,
-            isDisabled: isDisabled
-        }
+          inputValue: this.props.inputValue
+        };
     },
 
     getDefaultProps: function () {
@@ -87,6 +75,12 @@ var NumericSpinnerProperty = React.createClass({
             stepValue: 1,
             label: 'Prop value'
         };
+    },
+
+    componentWillReceiveProps: function (newProps) {
+      this.setState({
+        inputValue: newProps.inputValue
+      });
     },
 
     render: function () {
@@ -101,28 +95,25 @@ var NumericSpinnerProperty = React.createClass({
                                 <div className="input-group-btn">
                                     <button className="btn btn-default btn-xs"
                                             type="button"
-                                            disabled={this.state.isDisabled}
                                             onMouseDown={this._handlerForIncrement(1)}
-                                            onMouseUp={this._handleBlur}>
+                                            onMouseUp={this._stopIncrement}
+                                            onMouseOut={this._stopIncrement}>
                                         <span className="fa fa-plus"></span>
                                     </button>
                                     <button className="btn btn-default btn-xs"
                                             type="button"
-                                            disabled={this.state.isDisabled}
                                             onMouseDown={this._handlerForIncrement(-1)}
-                                            onMouseUp={this._handleBlur}>
+                                            onMouseUp={this._stopIncrement}
+                                            onMouseOut={this._stopIncrement}>
                                         <span className="fa fa-minus"></span>
                                     </button>
                                 </div>
                                 <input ref="inputElement"
                                        type="text"
-                                       disabled={this.state.isDisabled}
                                        className="form-control"
                                        value={this.state.inputValue}
                                        style={{textAlign: 'right', height: '1.85em', paddingTop: '2px', paddingBottom: '2px'}}
-                                       onChange={this._handleChangeInputValue}
-                                       onKeyDown={this._handleOnKeyDown}
-                                       onBlur={this._handleBlur}/>
+                                       onChange={this._handleChange}/>
 
                             </div>
                         </div>

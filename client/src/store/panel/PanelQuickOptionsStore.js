@@ -96,6 +96,7 @@ var PanelQuickOptionsStore = Reflux.createStore({
             searchResult.found.props = _.extend(searchResult.found.props, newProps);
             Repository.renewCurrentProjectModel(projectModel);
             DeskPageFrameActions.renderPageFrame();
+            this.model.props = searchResult.found.props;
             this.trigger(this.model);
             console.log("Trigger render", this.model);
         }
