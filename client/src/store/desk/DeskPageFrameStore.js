@@ -73,7 +73,6 @@ var DeskPageFrameStore = Reflux.createStore({
           return;
         }
 
-        console.log("Current selectUmyId:", this.model.selectedUmyId, "New dom node ID:", domNodeId);
         // If this component is already selected, no need to select again
         if(this.model.selectedUmyId == domNodeId) {
           return;
