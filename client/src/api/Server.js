@@ -4,7 +4,7 @@ var socket = null;
 var io = null;
 var serverHost = 'localhost';
 
-var Server = {
+let Server = {
 
     init: function(options){
         if(options.io){
